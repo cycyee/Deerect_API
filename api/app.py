@@ -131,8 +131,8 @@ def scrape_protected_content(search_url):
 
 
 
-# app = Flask(__name__)
-# @app.route('/api_scrape', methods=['GET'])
+app = Flask(__name__)
+@app.route('/api_scrape', methods=['GET'])
 
 def api_scrape():
     input_search = request.args.get('q')
@@ -151,6 +151,6 @@ def api_scrape():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# if __name__ == '__main__':
-#     app.run(host='127.0.0.1', debug=True, port=5000)
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', debug=True, port=5000)
 
