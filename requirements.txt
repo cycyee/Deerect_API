@@ -17,3 +17,8 @@ urllib3==2.2.2
 websocket-client==1.8.0
 Werkzeug==3.0.4
 wsl==0.12
+fastapi
+uvicorn
+requests
+beautifulsoup4
+python-dotenv

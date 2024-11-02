@@ -1,13 +1,17 @@
 from bs4 import BeautifulSoup
 from flask import Flask, request, jsonify
+from fastapi import FastAPI, HTTPException, Query
 import requests
 import json
 import os
 from dotenv import load_dotenv
+from typing import Optional
 
 
-app = Flask(__name__)
-@app.route('/api_scrape', methods=['GET'])
+app = FastAPI()
+
+#app = Flask(__name__)
+#@app.route('/api_scrape', methods=['GET'])
 
 def scrape_posts(input_search):
     if isinstance(input_search, str):
@@ -131,24 +135,22 @@ def scrape_protected_content(search_url):
         print(f"Failed to login. Status code: {login_response.status_code}")
 
 
-
-def api_scrape():
-    input_search = request.args.get('q')
-    if not input_search:
-        return jsonify({"error": "Please provide a search query (q parameter)."}), 400
+@app.get("/api_scrape")
+async def api_scrape(q: Optional[str] = Query(None, description="Search query string")):
+    
+    if not q:
+        raise HTTPException(status_code=400, detail="Please provide a search query (q parameter).")
     try:
-        scraped_data = scrape_posts(input_search)
-        #print (scraped_data)
+        scraped_data = scrape_posts(q)
+        print (scraped_data)
 
-        # for item in scraped_data:
-        #     url = item.get('url')
-        #     if url:
-        #         paid_data =  scrape_protected_content(url)
-        #         item.update(paid_data)
+        for item in scraped_data:
+            url = item.get('url')
+            if url:
+                paid_data =  scrape_protected_content(url)
+                item.update(paid_data)
+
         return jsonify(scraped_data)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', debug=True, port=5000)
+        raise HTTPException(status_code=500, detail=str(e))
 
