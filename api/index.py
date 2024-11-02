@@ -6,6 +6,8 @@ import os
 from dotenv import load_dotenv
 
 
+app = Flask(__name__)
+@app.route('/api_scrape', methods=['GET'])
 
 def scrape_posts(input_search):
     if isinstance(input_search, str):
@@ -129,10 +131,6 @@ def scrape_protected_content(search_url):
         print(f"Failed to login. Status code: {login_response.status_code}")
 
 
-
-
-app = Flask(__name__)
-@app.route('/api_scrape', methods=['GET'])
 
 def api_scrape():
     input_search = request.args.get('q')
