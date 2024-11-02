@@ -4,8 +4,11 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+from fake_useragent import UserAgent
 
 
+
+ua = UserAgent()
 
 def scrape_posts(input_search):
     if isinstance(input_search, str):
@@ -14,7 +17,7 @@ def scrape_posts(input_search):
     url = f'https://www.taxliens.com/listing/search.html?q={input_search}'
     print(url)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'User-Agent': ua.random,
         "authority": "www.taxliens.com",
         "method": "GET",
         "path": f"/listing/search.html?q={input_search}",
@@ -36,8 +39,13 @@ def scrape_posts(input_search):
         "sec-fetch-user": "?1",
         "upgrade-insecure-requests": "1",
     }
-    
-    response = requests.get(url, headers = headers)
+
+    proxies = {
+        "http": "http://your_proxy_ip:port",
+        "https": "http://your_proxy_ip:port",
+    }
+
+    response = requests.get(url, headers= headers, proxies= proxies)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
 
