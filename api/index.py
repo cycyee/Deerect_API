@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Query
 import requests
 import json
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from typing import Optional
 
 
