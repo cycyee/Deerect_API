@@ -1,18 +1,11 @@
 from bs4 import BeautifulSoup
 from flask import Flask, request, jsonify
-from fastapi import FastAPI, HTTPException, Query
 import requests
 import json
 import os
-#from dotenv import load_dotenv
-from typing import Optional
-from fastapi.responses import JSONResponse
+from dotenv import load_dotenv
 
 
-app = FastAPI()
-
-#app = Flask(__name__)
-#@app.route('/api_scrape', methods=['GET'])
 
 def scrape_posts(input_search):
     if isinstance(input_search, str):
@@ -74,7 +67,7 @@ def scrape_posts(input_search):
 
 def scrape_protected_content(search_url):
     # Start a session to persist cookies
-    #load_dotenv()
+    load_dotenv()
     session = requests.Session()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -136,22 +129,28 @@ def scrape_protected_content(search_url):
         print(f"Failed to login. Status code: {login_response.status_code}")
 
 
-@app.get("/api_scrape")
-async def api_scrape(q: Optional[str] = Query(None, description="Search query string")):
-    
-    if not q:
-        raise HTTPException(status_code=400, detail="Please provide a search query (q parameter).")
+
+
+app = Flask(__name__)
+@app.route('/api_scrape', methods=['GET'])
+
+def api_scrape():
+    input_search = request.args.get('q')
+    if not input_search:
+        return jsonify({"error": "Please provide a search query (q parameter)."}), 400
     try:
-        scraped_data = scrape_posts(q)
-        print (scraped_data)
+        scraped_data = scrape_posts(input_search)
+        #print (scraped_data)
 
         # for item in scraped_data:
         #     url = item.get('url')
         #     if url:
         #         paid_data =  scrape_protected_content(url)
         #         item.update(paid_data)
-
-        return JSONResponse(content=scraped_data) #jsonify(scraped_data)
+        return jsonify(scraped_data)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
+
+# if __name__ == '__main__':
+#     app.run(host='127.0.0.1', debug=True, port=5000)
 
