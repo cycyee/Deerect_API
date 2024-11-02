@@ -15,14 +15,28 @@ def scrape_posts(input_search):
     print(url)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-        "Referer": "https://www.taxliens.com/",
-        "DNT": "1",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-    
+        "authority": "www.taxliens.com",
+        "method": "GET",
+        "path": f"/listing/search.html?q={input_search}",
+        "scheme": "https",
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "en-US,en;q=0.9,fr;q=0.8",
+        "cache-control": "max-age=0",
+        "cookie": "partner=20775; listingsPerPageNew=10; _access_e2dcec174364='2024-09-25T23:36:28.353664346'; latestSearch='q=94901'; searchQuery='q=94901'; recently_viewed_listingids=62480246|62473326|62621015; __gads=ID=b4196d39eb2f0ea5:T=1722026553:RT=1729367783:S=ALNI_MafC75I3oDv5qLwjuHiPDqb_pYXgQ; __gpi=UID=00000e8a1d69898e:T=1722026553:RT=1729367783:S=ALNI_MZHnBqbIGxtq7BnKEZIe-1skKlATQ; __eoi=ID=a8344afbd2f248e4:T=1722026553:RT=1729367783:S=AA-AfjZa_ZVFiZhoVZPHh8dDgAtZ; JSESSIONID=443A9B55F2392FD1716692BF68B860E7; _gcl_au=1.1.1540189244.1730514164; _gid=GA1.2.1534464984.1730514164; currentLocation='locCity=SAN RAFAEL:locState=CA:locCounty=MARIN:locZipcode=94901'; _ga=GA1.1.470886793.1722026496; _ga_S8EQR9B85D=GS1.1.1730514163.27.1.1730514243.60.0.0",
+        "if-none-match": 'W/"012d1198fb429868de88006330a20c2f7"',
+        "priority": "u=0, i",
+        "referer": "https://www.taxliens.com/?q=94901",
+        "sec-ch-ua": '"Chromium";v="130", "Microsoft Edge";v="130", "Not?A_Brand";v="99"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
     }
+    
     response = requests.get(url, headers = headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
