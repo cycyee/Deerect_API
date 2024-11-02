@@ -136,10 +136,12 @@ app = Flask(__name__)
 
 def api_scrape():
     input_search = request.args.get('q')
+    app.logger.debug(f"Received query: {input_search}")
     if not input_search:
         return jsonify({"error": "Please provide a search query (q parameter)."}), 400
     try:
         scraped_data = scrape_posts(input_search)
+        app.logger.debug(f"Scraped data: {scraped_data}")
         #print (scraped_data)
 
         # for item in scraped_data:
@@ -151,6 +153,6 @@ def api_scrape():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# if __name__ == '__main__':
-#     app.run(host='127.0.0.1', debug=True, port=5000)
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', debug=True, port=5000)
 
