@@ -6,6 +6,7 @@ import json
 import os
 #from dotenv import load_dotenv
 from typing import Optional
+from fastapi.responses import JSONResponse
 
 
 app = FastAPI()
@@ -73,7 +74,7 @@ def scrape_posts(input_search):
 
 def scrape_protected_content(search_url):
     # Start a session to persist cookies
-    load_dotenv()
+    #load_dotenv()
     session = requests.Session()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -144,13 +145,13 @@ async def api_scrape(q: Optional[str] = Query(None, description="Search query st
         scraped_data = scrape_posts(q)
         print (scraped_data)
 
-        for item in scraped_data:
-            url = item.get('url')
-            if url:
-                paid_data =  scrape_protected_content(url)
-                item.update(paid_data)
+        # for item in scraped_data:
+        #     url = item.get('url')
+        #     if url:
+        #         paid_data =  scrape_protected_content(url)
+        #         item.update(paid_data)
 
-        return jsonify(scraped_data)
+        return JSONResponse(content=scraped_data) #jsonify(scraped_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
